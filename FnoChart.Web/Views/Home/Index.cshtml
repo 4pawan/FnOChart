@@ -1,0 +1,47 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<div id="curve_chart" style="width: 900px; height: 500px"></div>
+<script type="text/javascript">
+    google.charts.load('current', { 'packages': ['line'] });
+    google.charts.setOnLoadCallback(drawChart);
+
+    function getRandomInt(max) {
+        return Math.floor(Math.random() * max);
+    }
+
+    function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Day');
+        data.addColumn('number', 'Guardians of the Galaxy');
+        data.addColumn('number', 'The Avengers');
+        data.addColumn('number', 'Transformers: Age of Extinction');
+        
+        var jsonData = $.ajax({
+            url: "/api/chart",
+            dataType: "json",
+            async: false
+        }).responseText;
+        
+        $.each(JSON.parse(jsonData), function(key,val){
+            var array = [val.dt, val.price, val.pe, val.pe];
+            data.addRow(array);
+        });
+
+        var options = {
+            title: 'Company Performance',
+            curveType: 'function',
+            legend: { position: 'bottom' }
+        };
+
+        var chart = new google.charts.Line(document.getElementById('curve_chart'));
+        chart.draw(data, google.charts.Line.convertOptions(options));
+    }
+</script>
