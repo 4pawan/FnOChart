@@ -10,7 +10,7 @@
 <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <div id="curve_chart" style="width: 1000px; height: 300px"></div>
 <script type="text/javascript">
-    google.charts.load('current', { 'packages': ['line'] });
+    google.charts.load('current', { 'packages': ['annotatedtimeline'] });
     google.charts.setOnLoadCallback(drawChart);
 
     function getRandomInt(max) {
@@ -19,19 +19,19 @@
 
     function drawChart() {
         var data = new google.visualization.DataTable();
-        data.addColumn('string', 'Date');
+        data.addColumn('date', 'Date');
         data.addColumn('number', 'price');
         data.addColumn('number', 'PE');
         data.addColumn('number', 'CE');
-        
+
         var jsonData = $.ajax({
             url: "/api/chart",
             dataType: "json",
             async: false
         }).responseText;
-        
-        $.each(JSON.parse(jsonData), function(key,val){
-            var array = [val.dt, val.price, val.pe, val.pe];
+
+        $.each(JSON.parse(jsonData), function (key, val) {
+            var array = [new Date(val.dt), val.price, val.pe, val.pe];
             data.addRow(array);
         });
 
@@ -41,7 +41,10 @@
             legend: { position: 'bottom' }
         };
 
-        var chart = new google.charts.Line(document.getElementById('curve_chart'));
-        chart.draw(data, google.charts.Line.convertOptions(options));
+        var chart = new google.visualization.AnnotatedTimeLine(document.getElementById('curve_chart'));
+        chart.draw(data, { displayAnnotations: true });
+
+        //var chart = new google.charts.Line(document.getElementById('curve_chart'));
+        //chart.draw(data, google.charts.Line.convertOptions(options));
     }
 </script>
