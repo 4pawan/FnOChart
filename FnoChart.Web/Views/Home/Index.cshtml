@@ -36,13 +36,12 @@
         });
 
         var options = {
-            title: 'Company Performance',
-            curveType: 'function',
-            legend: { position: 'bottom' }
+            displayExactValues: true,
+            displayAnnotations: true
         };
 
         var chart = new google.visualization.AnnotatedTimeLine(document.getElementById('curve_chart'));
-        chart.draw(data, { displayAnnotations: true });
+        chart.draw(data, options);
 
         //var chart = new google.charts.Line(document.getElementById('curve_chart'));
         //chart.draw(data, google.charts.Line.convertOptions(options));
